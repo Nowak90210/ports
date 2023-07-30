@@ -1,10 +1,12 @@
 package main
 
 import (
-	"fmt"
+	"log"
+	"net/http"
 
 	"github.com/Nowak90210/ports/internal/app"
 	"github.com/Nowak90210/ports/internal/infrastructure/file"
+	transport "github.com/Nowak90210/ports/internal/infrastructure/http"
 	"github.com/Nowak90210/ports/internal/infrastructure/storage"
 )
 
@@ -13,12 +15,10 @@ func main() {
 	fileReader := file.NewJsonFileReader("json_files/")
 	service := app.NewService(repo, fileReader)
 
-	counter, err := service.SavePortsFromFile("ports.json")
-	if err != nil {
-		fmt.Println("err:", err)
-	}
+	handler := transport.NewHandler(service)
+	router := handler.GetRouter()
 
-	fmt.Printf("Saved %d rows", counter)
-	port, err := service.Get("ZWUTA")
-	fmt.Printf("port: %+v", port)
+	log.Println("JSON API server running on port: ", "8080")
+
+	http.ListenAndServe(":8080", router)
 }

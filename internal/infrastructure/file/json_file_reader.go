@@ -26,7 +26,9 @@ func (r *JsonFileReader) ReadPortsFromFile(fileName string, stream chan (*domain
 	filePath := fmt.Sprintf("%s%s", r.filesFolderPath, fileName)
 	file, err := os.Open(filePath)
 	if err != nil {
-		return fmt.Errorf("cannot open file: '%w'", err)
+		// it's not wrapped cause we don't want to show full path to end user
+		// We could log err here
+		return fmt.Errorf("cannot open file '%s'", fileName)
 	}
 
 	fileReader := bufio.NewReader(file)

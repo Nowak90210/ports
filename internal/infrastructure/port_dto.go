@@ -16,6 +16,22 @@ type PortDto struct {
 	Code        string    `json:"code"`
 }
 
+func FromDomain(port *domain.Port) *PortDto {
+	return &PortDto{
+		ID:          port.ID,
+		Name:        port.Name(),
+		City:        port.City(),
+		Province:    port.Province(),
+		Country:     port.Country(),
+		Alias:       port.Alias(),
+		Regions:     port.Regions(),
+		Coordinates: port.Coordinates(),
+		Timezone:    port.Timezone(),
+		Unlocs:      port.Unlocs(),
+		Code:        port.Code(),
+	}
+}
+
 func (d *PortDto) ToDomain() *domain.Port {
 	return domain.NewPort(d.ID, d.Name, d.City, d.Province, d.Country, d.Timezone, d.Code, d.Alias, d.Regions, d.Unlocs, d.Coordinates)
 }
