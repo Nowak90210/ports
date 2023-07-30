@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"path/filepath"
 
 	"github.com/Nowak90210/ports/internal/app"
 	"github.com/Nowak90210/ports/internal/infrastructure"
@@ -11,7 +12,11 @@ import (
 )
 
 type apiError struct {
-	Error string
+	Error string `json:"error"`
+}
+
+type postFileResponse struct {
+	SavedRows int `json:"saved_rows"`
 }
 
 type Handler struct {
@@ -60,14 +65,15 @@ func (h *Handler) handlePostFile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//TODO: Path Traversal Validation
-	counter, err := h.service.SavePortsFromFile(fileName)
+	// preventing path traversal
+	cleanFileName := filepath.Clean(fileName)
+	counter, err := h.service.SavePortsFromFile(cleanFileName)
 	if err != nil {
 		h.writeJSON(w, http.StatusInternalServerError, apiError{Error: err.Error()})
 		return
 	}
 
-	h.writeJSON(w, http.StatusOK, struct{ SavedRows int }{SavedRows: counter})
+	h.writeJSON(w, http.StatusCreated, postFileResponse{SavedRows: counter})
 }
 
 func (h *Handler) writeJSON(w http.ResponseWriter, status int, v any) error {
