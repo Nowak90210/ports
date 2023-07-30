@@ -4,14 +4,14 @@ import (
 	"testing"
 
 	"github.com/Nowak90210/ports/internal/domain"
-	"github.com/Nowak90210/ports/internal/infrastructure/storage/file"
+	"github.com/Nowak90210/ports/internal/infrastructure/file"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestReadJsonFile(t *testing.T) {
 	portsChan := make(chan *domain.Port)
 	ports := make([]*domain.Port, 0)
-	fileReader := file.NewJsonFileReader()
+	fileReader := file.NewJsonFileReader("")
 
 	go fileReader.ReadPortsFromFile("test_file.json", portsChan)
 

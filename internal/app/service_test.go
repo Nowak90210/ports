@@ -11,7 +11,8 @@ import (
 
 func TestSavePort(t *testing.T) {
 	repo := storage.NewInMemoryRepo()
-	servce := app.NewService(repo)
+	var mockReader app.FileReader
+	servce := app.NewService(repo, mockReader)
 
 	id := "testID"
 	port := domain.NewPort(id, "test name", "city", "province", "country", "timezone", "52000", nil, nil, nil, []float64{15.23, 123.634})

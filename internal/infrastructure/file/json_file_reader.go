@@ -10,16 +10,21 @@ import (
 	"github.com/Nowak90210/ports/internal/infrastructure"
 )
 
-type JsonFileReader struct{}
+type JsonFileReader struct {
+	filesFolderPath string
+}
 
-func NewJsonFileReader() *JsonFileReader {
-	return &JsonFileReader{}
+func NewJsonFileReader(filesFolderPath string) *JsonFileReader {
+	return &JsonFileReader{
+		filesFolderPath: filesFolderPath,
+	}
 }
 
 func (r *JsonFileReader) ReadPortsFromFile(fileName string, stream chan (*domain.Port)) error {
 	defer close(stream)
 
-	file, err := os.Open(fileName)
+	filePath := fmt.Sprintf("%s%s", r.filesFolderPath, fileName)
+	file, err := os.Open(filePath)
 	if err != nil {
 		return fmt.Errorf("cannot open file: '%w'", err)
 	}
